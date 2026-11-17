@@ -34,11 +34,25 @@ power law fitted between 1 month and 1 year carries on down to 1 day.
 Files: `stage2.py` (closed forms and statistics), `job2.py` (writes `results2.json` and `results2.md`),
 `test_stage2.py` (offline tests, including the closed form against the stage-1 numerical integrator).
 
+## Stage 3
+
+[PREREG3.md](PREREG3.md), registered before any stage-1 or stage-2 result existed, removes the scheduled macro
+releases. When CPI, the jobs report or an FOMC statement falls in the next session, VIX1D carries the known event
+variance on the eve and drops it after the release. That roll is not diffusive vol-of-vol, and no kernel model
+describes it. Stage 3 labels every daily pair by whether a release enters or leaves the one-day window, using the
+BLS release archives and the Federal Reserve calendar (2022-2026, including the shutdown-delayed releases of 2025).
+It then repeats the stage-1 and stage-2 tests on the clean pairs and measures how much of VIX1D's daily variance the
+release calendar carries.
+
+Files: `stage3.py` (release calendars, eves, pair labels), `job3.py` (writes `results3.json` and `results3.md`),
+`test_stage3.py` (offline tests).
+
 ## Run it
 
-    python -m unittest -v test_volvol test_stage2
+    python -m unittest -v test_volvol test_stage2 test_stage3
     python job.py --data-dir data --out-dir out      # stage 1, about 5 minutes on one CPU
     python job2.py --data-dir data --out-dir out     # stage 2, about 10 minutes on one CPU
+    python job3.py --data-dir data --out-dir out     # stage 3, about 10 minutes on one CPU
 
 Results, with every prediction graded right or wrong, will be added as `RESULTS.md`.
 
